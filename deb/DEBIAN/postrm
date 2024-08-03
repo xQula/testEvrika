@@ -1,0 +1,6 @@
+#!/bin/bash
+
+if [ -d /opt/testEvrika ]; then
+    rm -rf /opt/testEvrika 
+fi
+

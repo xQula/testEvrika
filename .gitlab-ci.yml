@@ -1,0 +1,34 @@
+variables:
+  GIT_DEPTH: 100
+  GIT_SUBMODULE_STRATEGY: recursive
+
+include:
+    - local: '.gitlab/snippets.yml'
+
+stages:
+  - build
+  - packages
+
+alse:build:
+  stage: build
+  tags: [alse]
+  script:
+    - !reference [.testEvrika, bin]
+  artifacts:
+    expire_in: 1 hour
+    paths: 
+        - target/
+
+alse:deb:
+  stage: packages
+  tags: [alse]
+  needs:
+    - job: alse:build
+      artifacts: true
+  script:
+    - !reference [.testEvrika, deb]
+  artifacts:
+    expire_in: 1 hour
+    paths: 
+        - target/
+

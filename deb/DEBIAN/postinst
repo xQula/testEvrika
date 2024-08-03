@@ -1,0 +1,8 @@
+#!/bin/bash
+
+if [ -d /opt/testEvrika ]; then
+    chmod ugo+rw /opt/testEvrika -R
+fi
+systemctl enable --now testEvrika.service
+
+

@@ -1,0 +1,30 @@
+---
+
+.testEvrika:
+    bin:
+        - !reference [.testEvrika, vars]
+        - mkdir build && cd build
+        - cmake -GNinja -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ .. && cmake --build .
+        - cd -
+        - mkdir -p target/$NAME_PROJECT/bin
+        - cp build/$NAME_PROJECT target/$NAME_PROJECT/bin
+        # - if ["$PWD" != "$CI_PROJECT_DIR"]; then cp -r target $CI_PROJECT_DIR/target; fi
+    deb: 
+        - !reference [.testEvrika, vars]
+        - mkdir -p deb/opt/$NAME_PROJECT/
+        - cp -r target/$NAME_PROJECT/bin/ deb/opt/$NAME_PROJECT/
+        - 'echo "Version: ${DEBIAN_PACKAGE_VERSION}" >> deb/DEBIAN/control'
+        - chmod +x deb/DEBIAN/postinst
+        - chmod +x deb/DEBIAN/postrm
+        - mkdir -p deb/lib/systemd/system
+        - cp testEvrika.desktop deb/lib/systemd/system        
+        - dpkg-deb --build deb $DEBAIN_PACKAGE_NAME
+        - rm -rf target/*
+        - cp $DEBAIN_PACKAGE_NAME target/$DEBAIN_PACKAGE_NAME
+        # - if ["$PWD" != "$CI_PROJECT_DIR"]; then cp -r target $CI_PROJECT_DIR/target; fi
+    vars:
+        - NAME_PROJECT=testEvrika
+        - DEBIAN_PACKAGE_VERSION=$(git describe --always --tag)
+        - DEBAIN_PACKAGE_NAME=${NAME_PROJECT}_${DEBIAN_PACKAGE_VERSION}.deb
+
+

@@ -1,0 +1,5 @@
+[Desktop Entry]
+Type=Application
+Name=testEvrika
+Exec=/opt/testEvrika/bin/testEvrika
+
